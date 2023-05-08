@@ -1,0 +1,4 @@
+classDiagram
+    Order o-- OrderLine: Lines
+    Payment --> Order: OrderId
+    Payment --> Payment: PreviousPayment

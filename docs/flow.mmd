@@ -1,0 +1,47 @@
+flowchart LR
+    external((EA))
+    order(Order)
+    payment(Payment)
+
+    failp{{FailPayment}}
+    pay{{Pay}}
+    createorder{{CreateOrder}}
+    addproduct{{AddProduct}}
+    placeorder{{PlaceOrder}}
+
+    external-->createorder-. Create .->order
+    external-->addproduct-. AddProduct .->order
+    external-->placeorder-. Place .->order
+    external---->failp-. Fail .->payment
+    external---->pay-. Pay .->payment
+
+
+    oc>OrderCreated]
+    ola>OrderLineAdded]
+    op>OrderPlaced]
+    opp>OrderPaid]
+
+    order-- Create -->oc
+    order-- AddProduct -->ola
+    order-- Place -->op
+    order-- Pay -->opp
+
+    pi>PaymentInitiated]
+    pf>PaymentFailed]
+    ps>PaymentSucceeded]
+
+    payment-- Start -->pi
+    payment-- Retry -->pi
+    payment-- Pay -->ps
+    payment-- Fail -->pf
+
+    reserveproduct[[ReserveProductEH]]
+    initiatepayment[[InitiatePaymentEH]]
+    retrypayment[[RetryPaymentEH]]
+    finalizeorder[[FinalizeOrderEH]]
+
+    ola-->reserveproduct
+    op---->initiatepayment-. Start .->payment
+
+    ps-->finalizeorder-. Pay .->order
+    pf-->retrypayment-. Retry .->payment
